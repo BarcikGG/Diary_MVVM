@@ -1,0 +1,55 @@
+﻿<Window x:Class="Diary_MVVM.View.VisitWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Diary_MVVM.View" xmlns:viewmodel="clr-namespace:Diary_MVVM.ViewModel"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="470" Width="800" MinHeight="465" MinWidth="650" Background="#FF393737">
+    <Window.DataContext>
+        <viewmodel:VisitViewModel></viewmodel:VisitViewModel>
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="6*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="0.7*"/>
+            <RowDefinition Height="0.5*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel x:Name="StackPanel" Grid.Row="1" Grid.RowSpan="3" VerticalAlignment="Center">
+            <Button x:Name="PeopleBtn" BorderBrush="#00CDDC39" Height="60px" Margin="0,0,0,10" Command="{Binding OpenStud}">
+                <Button.Background>
+                    <ImageBrush Stretch="Uniform" ImageSource="/View/users-alt.png"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="VisitBtn" BorderBrush="#00CDDC39" Height="60px" Margin="0,0,0,10" Command="{Binding OpenVisit}">
+                <Button.Background>
+                    <ImageBrush Stretch="Uniform" ImageSource="/View/calendar.png"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="PayBtn" BorderBrush="#00CDDC39" Height="60px" Margin="0,0,0,10" Command="{Binding OpenPayments}">
+                <Button.Background>
+                    <ImageBrush Stretch="Uniform" ImageSource="/View/dollar.png"/>
+                </Button.Background>
+            </Button>
+        </StackPanel>
+
+        <DataGrid x:Name="DataGrid" Grid.Column="1" Grid.RowSpan="4" ItemsSource="{Binding Content}" SelectedItem="{Binding Selected}"/>
+        <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+            <Button x:Name="AddBtn" Content="Add" Margin="0,0,50,0"/>
+            <Button x:Name="EditBtn" Content="Edit" Margin="0,0,50,0"/>
+            <Button x:Name="DelBtn" Content="Delete"/>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+            <TextBox Foreground="White" Text="{Binding Selected.FIO}" Width="150px" Margin="0,0,50,0"/>
+            <DatePicker SelectedDate="{Binding Selected.Date}" Width="150px"/>
+        </StackPanel>
+    </Grid>
+</Window>
