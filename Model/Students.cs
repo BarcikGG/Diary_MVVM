@@ -12,6 +12,7 @@ namespace Diary_MVVM.Model
         public string Group { get; set; }
         public int Price { get; set; }
 
+        public Students() { }
         public Students(string fio, string group, int price)
         {
             FIO = fio;

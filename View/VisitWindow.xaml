@@ -43,9 +43,9 @@
 
         <DataGrid x:Name="DataGrid" Grid.Column="1" Grid.RowSpan="4" ItemsSource="{Binding Content}" SelectedItem="{Binding Selected}"/>
         <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-            <Button x:Name="AddBtn" Content="Add" Margin="0,0,50,0"/>
-            <Button x:Name="EditBtn" Content="Edit" Margin="0,0,50,0"/>
-            <Button x:Name="DelBtn" Content="Delete"/>
+            <Button x:Name="AddBtn" Content="Add" Margin="0,0,50,0" Command="{Binding Add}"/>
+            <Button x:Name="EditBtn" Content="Save" Margin="0,0,50,0" Command="{Binding Apply}"/>
+            <Button x:Name="DelBtn" Content="Delete" Command="{Binding Delete}"/>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
             <TextBox Foreground="White" Text="{Binding Selected.FIO}" Width="150px" Margin="0,0,50,0"/>

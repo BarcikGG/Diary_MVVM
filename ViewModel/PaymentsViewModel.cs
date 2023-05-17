@@ -1,56 +1,25 @@
 ﻿using Diary_MVVM.Model;
 using Diary_MVVM.View;
 using Diary_MVVM.ViewModel.Helpers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Windows;
 
 namespace Diary_MVVM.ViewModel
 {
     internal class PaymentsViewModel : BindingHelpers
     {
-        private string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\mvvm.json";
+        private string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\payments.json";
 
         #region свойства
         public BindableCommand OpenStud { get; set; }
         public BindableCommand OpenVisit { get; set; }
         public BindableCommand Add { get; set; }
-
-        private string _fioText;
-        public string FIOText
-        {
-            get { return _fioText; }
-            set
-            {
-                _fioText = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _statusText;
-        public string StatusText
-        {
-            get { return _statusText; }
-            set
-            {
-                _statusText = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _lessonsText;
-        public string LessonsText
-        {
-            get { return _lessonsText; }
-            set
-            {
-                _lessonsText = value;
-                OnPropertyChanged();
-            }
-        }
+        public BindableCommand Delete { get; set; }
+        public BindableCommand Apply { get; set; }
 
         private ObservableCollection<string> _comboItems;
         public ObservableCollection<string> ComboItems
@@ -63,7 +32,7 @@ namespace Diary_MVVM.ViewModel
             }
         }
 
-        private Payments _selected;
+        private Payments _selected = new Payments();
         public Payments Selected
         {
             get { return _selected; }
@@ -71,24 +40,11 @@ namespace Diary_MVVM.ViewModel
             {
                 _selected = value;
                 OnPropertyChanged();
-
-                if (Selected != null)
-                {
-                    FIOText = Selected.FIO;
-                    StatusText = Selected.Status;
-                    LessonsText = Selected.Lessons.ToString();
-                }
-                else
-                {
-                    FIOText = string.Empty;
-                    StatusText = string.Empty;
-                    LessonsText = string.Empty;
-                }
             }
         }
 
-        private ObservableCollection<Object> _content;
-        public ObservableCollection<Object> Content
+        private ObservableCollection<Payments> _content;
+        public ObservableCollection<Payments> Content
         {
             get { return _content; }
             set
@@ -101,6 +57,11 @@ namespace Diary_MVVM.ViewModel
 
         public PaymentsViewModel()
         {
+            if (!File.Exists(fileName))
+            {
+                File.AppendAllText(fileName, "[]");
+            }
+
             ComboItems = new ObservableCollection<string>()
             {
                 "Оплачено",
@@ -108,23 +69,53 @@ namespace Diary_MVVM.ViewModel
                 "Отменено"
             };
 
-            Content = new ObservableCollection<Object>()
+            string json = File.ReadAllText(fileName);
+            if (json != "[]")
             {
-                new Payments("Bobrov Petr Sergeevich", "Оплачено", 6),
-                new Payments("Abobov Sergay Alexandrovich", "Ожидает оплаты", 4),
-                new Payments("Eshe Odin Chelick", "Ожидает оплаты", 4)
-            };
+                var pay = JsonConvert.DeserializeObject<List<Payments>>(json);
+                Content = new ObservableCollection<Payments>(pay);
+            }
+            else 
+            {
+                Content = new ObservableCollection<Payments>();
+            }
 
             OpenStud = new BindableCommand(_ => OpenWindow());
-
             OpenVisit = new BindableCommand(_ => OpenVisits());
-
             Add = new BindableCommand(_ => AddPay());
+            Delete = new BindableCommand(_ => DeletePay());
+            Apply = new BindableCommand(_ => ApplySave());
         }
 
         private void AddPay()
         {
-            Content.Add(new Payments(FIOText, StatusText, Convert.ToInt32(LessonsText)));
+            try
+            {
+                if (Selected.FIO != null & Selected.Status != null & Selected.Lessons > 0)
+                {
+                    Content.Add(new Payments(Selected.FIO, Selected.Status, Convert.ToInt32(Selected.Lessons)));
+                }
+                else MessageBox.Show("Поля пустые!");
+            }
+            catch (Exception ex)
+            { 
+                MessageBox.Show("Ошибка добавления" + ex.ToString()); 
+            }
+        }
+
+        private void DeletePay() 
+        {
+            if (Selected != null)
+            {
+                Content.Remove(Selected);
+                OnPropertyChanged();
+            }
+            else MessageBox.Show("Запись не выбрана");
+        }
+
+        private void ApplySave() 
+        {
+            Json.Serialize(Content, fileName);
         }
 
         private void OpenWindow()

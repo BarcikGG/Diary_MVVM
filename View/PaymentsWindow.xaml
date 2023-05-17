@@ -42,15 +42,15 @@
         </StackPanel>
 
         <DataGrid x:Name="DataGrid" Grid.Column="1" Grid.RowSpan="4" ItemsSource="{Binding Content}" SelectedItem="{Binding Selected}"/>
-        <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+        <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center" Cursor="">
             <Button x:Name="AddBtn" Content="Add" Margin="0,0,50,0" Command="{Binding Add}"/>
-            <Button x:Name="EditBtn" Content="Edit" Margin="0,0,50,0"/>
-            <Button x:Name="DelBtn" Content="Delete"/>
+            <Button x:Name="EditBtn" Content="Apply" Margin="0,0,50,0" Command="{Binding Apply}"/>
+            <Button x:Name="DelBtn" Content="Delete" Command="{Binding Delete}"/>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-            <TextBox Foreground="White" x:Name="FioText" Text="{Binding FIOText, Mode=TwoWay}" Width="150px" Margin="0,0,50,0"/>
-            <ComboBox x:Name="ItemBox" Width="150px" SelectedItem="{Binding StatusText, Mode=TwoWay}" ItemsSource="{Binding ComboItems}" Margin="0,0,50,0"/>
-            <TextBox Foreground="White" x:Name="LessonsText" Text="{Binding LessonsText, Mode=TwoWay}" Width="150px"/>
+            <TextBox Foreground="White" x:Name="FioText" Text="{Binding Selected.FIO}" Width="150px" Margin="0,0,50,0"/>
+            <ComboBox x:Name="ItemBox" Width="150px" SelectedItem="{Binding Selected.Status}" ItemsSource="{Binding ComboItems}" Margin="0,0,50,0"/>
+            <TextBox Foreground="White" x:Name="LessonsText" Text="{Binding Selected.Lessons}" Width="150px"/>
         </StackPanel>
     </Grid>
 </Window>

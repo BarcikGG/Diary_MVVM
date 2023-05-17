@@ -11,6 +11,7 @@ namespace Diary_MVVM.Model
         public string FIO { get; set; }
         public DateTime Date { get; set; }
 
+        public Visit() { }
         public Visit(string fio, DateTime date)
         {
             FIO = fio;
