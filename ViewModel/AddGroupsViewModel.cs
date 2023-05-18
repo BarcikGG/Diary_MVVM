@@ -1,18 +1,18 @@
-﻿using Diary_MVVM.Model;
+﻿using Diary_MVVM.ViewModel.Helpers;
+using Diary_MVVM.Model;
 using Diary_MVVM.View;
-using Diary_MVVM.ViewModel.Helpers;
-using Newtonsoft.Json;
 using System;
+using System.Windows;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Windows;
 
 namespace Diary_MVVM.ViewModel
 {
-    internal class VisitViewModel : BindingHelpers
+    internal class AddGroupsViewModel : BindingHelpers
     {
-        private string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\visits.json";
+        private string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\groups.json";
 
         #region свойства
 
@@ -20,11 +20,8 @@ namespace Diary_MVVM.ViewModel
         public BindableCommand Delete { get; set; }
         public BindableCommand Apply { get; set; }
 
-        public BindableCommand OpenStud { get; set; }
-        public BindableCommand OpenPayments { get; set; }
-
-        private Visit _selected;
-        public Visit Selected
+        private Groups _selected;
+        public Groups Selected
         {
             get { return _selected; }
             set
@@ -34,8 +31,8 @@ namespace Diary_MVVM.ViewModel
             }
         }
 
-        private ObservableCollection<Visit> _content;
-        public ObservableCollection<Visit> Content
+        private ObservableCollection<Groups> _content;
+        public ObservableCollection<Groups> Content
         {
             get { return _content; }
             set
@@ -46,7 +43,7 @@ namespace Diary_MVVM.ViewModel
         }
         #endregion
 
-        public VisitViewModel()
+        public AddGroupsViewModel()
         {
             if (!File.Exists(fileName))
             {
@@ -56,17 +53,14 @@ namespace Diary_MVVM.ViewModel
             string json = File.ReadAllText(fileName);
             if (json != "[]")
             {
-                var visit = JsonConvert.DeserializeObject<List<Visit>>(json);
-                Content = new ObservableCollection<Visit>(visit);
+                var groups = JsonConvert.DeserializeObject<List<Groups>>(json);
+                Content = new ObservableCollection<Groups>(groups);
             }
             else
             {
-                Content = new ObservableCollection<Visit>();
+                Content = new ObservableCollection<Groups>();
             }
-            Selected = new Visit();
-
-            OpenStud = new BindableCommand(_ => OpenWindow());
-            OpenPayments = new BindableCommand(_ => OpenPay());
+            Selected = new Groups();
 
             Add = new BindableCommand(_ => AddPay());
             Delete = new BindableCommand(_ => DeletePay());
@@ -77,9 +71,9 @@ namespace Diary_MVVM.ViewModel
         {
             try
             {
-                if (Selected.FIO != null & Selected.Date.ToString() != null)
+                if (Selected.GroupName != null)
                 {
-                    Content.Add(new Visit(Selected.FIO, Selected.Date));
+                    Content.Add(new Groups(Selected.GroupName));
                 }
                 else MessageBox.Show("Поля пустые!");
             }
@@ -102,17 +96,6 @@ namespace Diary_MVVM.ViewModel
         private void ApplySave()
         {
             Json.Serialize(Content, fileName);
-        }
-
-        private void OpenWindow()
-        {
-            var newWindow = new MainWindow();
-            newWindow.Show();
-        }
-        private void OpenPay()
-        {
-            var newWindow = new PaymentsWindow();
-            newWindow.Show();
         }
     }
 }

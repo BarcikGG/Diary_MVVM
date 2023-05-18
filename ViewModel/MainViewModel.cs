@@ -13,10 +13,12 @@ namespace Diary_MVVM.ViewModel
     internal class MainViewModel : BindingHelpers
     {
         private string fileName = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\students.json";
+        private string groupsFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\groups.json";
 
         #region свойства
 
         public BindableCommand Add { get; set; }
+        public BindableCommand AddGroup { get; set; }
         public BindableCommand Delete { get; set; }
         public BindableCommand Apply { get; set; }
 
@@ -74,13 +76,19 @@ namespace Diary_MVVM.ViewModel
             {
                 Content = new ObservableCollection<Students>();
             }
+            Selected = new Students();
 
-            ComboItems = new ObservableCollection<string>()
+            json = File.ReadAllText(groupsFile);
+            if (json != "[]")
             {
-                "P50-4-21",
-                "Четверг 20:00",
-                "ПН 19:30"
-            };
+                var groups = JsonConvert.DeserializeObject<List<Groups>>(json);
+                ComboItems = new ObservableCollection<string>();
+                foreach (var item in groups)
+                {
+                    ComboItems.Add(item.GroupName);
+                }
+            }
+            else ComboItems = new ObservableCollection<string>();
 
             OpenPayments = new BindableCommand(_ => OpenWindow());
             OpenVisit = new BindableCommand(_ => OpenVisits());
@@ -88,6 +96,8 @@ namespace Diary_MVVM.ViewModel
             Add = new BindableCommand(_ => AddPay());
             Delete = new BindableCommand(_ => DeletePay());
             Apply = new BindableCommand(_ => ApplySave());
+
+            AddGroup = new BindableCommand(_ => OpenAddGroup());
         }
 
         private void AddPay()
@@ -100,7 +110,7 @@ namespace Diary_MVVM.ViewModel
                 }
                 else MessageBox.Show("Поля пустые!");
             }
-            catch (Exception ex)
+            catch
             {
                 MessageBox.Show("Ошибка добавления");
             }
@@ -129,6 +139,11 @@ namespace Diary_MVVM.ViewModel
         private void OpenVisits()
         {
             var newWindow = new VisitWindow();
+            newWindow.Show();
+        }
+        private void OpenAddGroup()
+        {
+            var newWindow = new AddGroupsWindow();
             newWindow.Show();
         }
     }

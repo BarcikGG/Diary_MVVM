@@ -25,7 +25,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel x:Name="StackPanel" Grid.Row="1" Grid.RowSpan="3" VerticalAlignment="Center">
-            <Button x:Name="PeopleBtn" BorderBrush="#00CDDC39" Height="60px" Margin="0,0,0,10" Command="{Binding OpenStud}">
+            <Button x:Name="PeopleBtn" BorderBrush="#00CDDC39" Height="60px" Margin="0,0,0,10">
                 <Button.Background>
                     <ImageBrush Stretch="Uniform" ImageSource="/View/users-alt.png"/>
                 </Button.Background>
@@ -45,7 +45,7 @@
         <DataGrid x:Name="DataGrid" Grid.Column="1" Grid.RowSpan="4" ItemsSource="{Binding Content}" SelectedItem="{Binding Selected}"/>
         <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
             <Button x:Name="AddBtn" Content="Add" Margin="0,0,50,0" Command="{Binding Add}"/>
-            <Button x:Name="EditBtn" Content="Edit" Margin="0,0,50,0" Command="{Binding Apply}"/>
+            <Button x:Name="EditBtn" Content="Apply" Margin="0,0,50,0" Command="{Binding Apply}"/>
             <Button x:Name="DelBtn" Content="Delete" Command="{Binding Delete}"/>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
@@ -53,5 +53,7 @@
             <ComboBox Width="150px" SelectedItem="{Binding Selected.Group}" ItemsSource="{Binding ComboItems}" Margin="0,0,50,0"/>
             <TextBox Foreground="White" Text="{Binding Selected.Price}" Width="150px"/>
         </StackPanel>
+
+        <Button x:Name="AddGroup" Content="Add group" FontSize="12" Grid.Row="5" Margin="10,0,10,0" Command="{Binding AddGroup}"/>
     </Grid>
 </Window>
